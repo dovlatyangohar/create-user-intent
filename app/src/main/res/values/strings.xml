@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">UserApp</string>
+    <string name="gender">Gender*</string>
+    <string name="female">Female</string>
+    <string name="male">Male</string>
+    <string name="email">Email*</string>
+    <string name="password">Password*</string>
+    <string name="add_photo">Add photo</string>
+    <string name="save">Save</string>
+    <string name="first_name">First name*</string>
+    <string name="last_name">Last Name*</string>
+    <string name="create_user">Create user</string>
+    <string name="user_image">user image</string>
+    <string name="first_nametv">First NameTV</string>
+    <string name="last_nametv">Last NameTV</string>
+    <string name="create_new_user">Create new user</string>
 </resources>

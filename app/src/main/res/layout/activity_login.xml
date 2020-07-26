@@ -12,7 +12,7 @@
         android:id="@+id/firstNameEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="First name"
+        android:hint="@string/first_name"
         android:inputType="text"
         android:textSize="22sp" />
 
@@ -20,7 +20,7 @@
         android:id="@+id/lastNameEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Last Name"
+        android:hint="@string/last_name"
         android:inputType="text"
         android:textSize="22sp" />
 
@@ -28,7 +28,7 @@
         android:id="@+id/genderTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Gender" />
+        android:text="@string/gender" />
 
     <RadioGroup
         android:id="@+id/radioGroup"
@@ -40,20 +40,20 @@
             android:id="@+id/femaleRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Female" />
+            android:text="@string/female" />
 
         <RadioButton
             android:id="@+id/maleRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Male" />
+            android:text="@string/male" />
     </RadioGroup>
 
     <EditText
         android:id="@+id/emailEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Email"
+        android:hint="@string/email"
         android:inputType="textEmailAddress"
         android:textSize="22sp" />
 
@@ -61,38 +61,38 @@
         android:id="@+id/passwordEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Password"
+        android:hint="@string/password"
         android:inputType="textPassword"
         android:textSize="22sp" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_gravity="end"
-        >
+        android:orientation="horizontal">
+
         <CheckBox
             android:id="@+id/checkbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:clickable="false"
             android:layout_gravity="end" />
+
         <Button
             android:id="@+id/addPhotoButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add photo"
-            />
+            android:text="@string/add_photo" />
     </LinearLayout>
+
     <Button
         android:id="@+id/saveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save"
         android:layout_gravity="end"
+        android:text="@string/save"
 
         />
-
-
 
 
 </LinearLayout>

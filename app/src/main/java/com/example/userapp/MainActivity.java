@@ -2,6 +2,8 @@ package com.example.userapp;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,22 +12,25 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
     private Button createUserButton;
-    private TextView firstNameTextView;
-    private TextView lastNameTextView;
-
+    private List<User> usersList;
+    String firstName;
+    String lastName;
+    String coverImgPath;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         createUserButton = findViewById(R.id.createUserButton);
-
-        firstNameTextView = findViewById(R.id.firstNameTextView);
-        lastNameTextView = findViewById(R.id.lastNameTextView);
+        usersList = new ArrayList<>();
 
         createUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -36,31 +41,35 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    static final int REQUEST_CODE = 1;
+
     private void sendIntent() {
         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-        startActivityForResult(intent, 1);
+        startActivityForResult(intent, REQUEST_CODE);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 1) {
+        if (requestCode == REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
+                if (data != null) {
+                    firstName = data.getStringExtra("firstName");
+                    lastName = data.getStringExtra("lastName");
+                     coverImgPath = data.getStringExtra("imgPath");
+                    usersList.add(new User(firstName, lastName,coverImgPath));
 
-                String firstName = data.getStringExtra("firstName");
-                String lastName = data.getStringExtra("lastName");
-                firstNameTextView.setText(firstName + " ");
-                lastNameTextView.setText(lastName);
-                createUserButton.setText("Create new user");
+                    RecyclerView recyclerView = findViewById(R.id.recyclerView);
+                    UserAdapter adapter = new UserAdapter(usersList);
 
+                    recyclerView.setLayoutManager(new LinearLayoutManager(this));
+                    recyclerView.setAdapter(adapter);
+                    createUserButton.setText(R.string.create_new_user);
 
-                if (resultCode == RESULT_CANCELED) {
+                } else
                     Toast.makeText(getApplicationContext(), "something went wrong", Toast.LENGTH_SHORT).show();
-                }
-
             }
-
         }
     }
 
