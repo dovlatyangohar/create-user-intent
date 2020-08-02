@@ -1,18 +1,47 @@
 package com.example.userapp;
 
-public class User {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class User implements Parcelable {
     private String firstName;
     private String lastName;
-    private boolean gender;
+    private String gender;
     private String email;
     private String password;
     private String imgPath;
+    private boolean isSelected;
 
-    public User(String firstName, String lastName, String imgPath) {
+
+
+    public User(String firstName, String lastName, String gender, String email, String imgPath) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.gender = gender;
+        this.email = email;
         this.imgPath = imgPath;
     }
+
+    protected User(Parcel in) {
+        firstName = in.readString();
+        lastName = in.readString();
+        gender = in.readString();
+        email = in.readString();
+        password = in.readString();
+        imgPath = in.readString();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
     public String getImgPath() {
         return imgPath;
@@ -30,9 +59,6 @@ public class User {
         this.lastName = lastName;
     }
 
-    public void setGender(boolean gender) {
-        this.gender = gender;
-    }
 
     public void setEmail(String email) {
         this.email = email;
@@ -41,18 +67,12 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
-
-    public User(String firstName, String lastName) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public String getGender() {
+        return gender;
     }
 
-    public User(String firstName, String lastName, boolean gender, String email, String password) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public void setGender(String gender) {
         this.gender = gender;
-        this.email = email;
-        this.password = password;
     }
 
     public String getFirstName() {
@@ -63,9 +83,6 @@ public class User {
         return lastName;
     }
 
-    public boolean isGender() {
-        return gender;
-    }
 
     public String getEmail() {
         return email;
@@ -73,5 +90,28 @@ public class User {
 
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(firstName);
+        dest.writeString(lastName);
+        dest.writeString(gender);
+        dest.writeString(email);
+        dest.writeString(password);
+        dest.writeString(imgPath);
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 }

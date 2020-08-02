@@ -5,7 +5,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -14,7 +16,6 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText firstNameEditText;
     private EditText lastNameEditText;
     private TextView genderTextView;
+    private RadioGroup radioGender;
     private RadioButton femaleRadioButton;
     private RadioButton maleRadioButton;
     private EditText emailEditText;
@@ -50,6 +52,7 @@ public class LoginActivity extends AppCompatActivity {
         lastNameEditText = findViewById(R.id.lastNameEditText);
 
         genderTextView = findViewById(R.id.genderTextView);
+        radioGender = findViewById(R.id.radioGroup);
         femaleRadioButton = findViewById(R.id.femaleRadioButton);
         maleRadioButton = findViewById(R.id.maleRadioButton);
 
@@ -60,7 +63,6 @@ public class LoginActivity extends AppCompatActivity {
         addPhotoButton = findViewById(R.id.addPhotoButton);
         photoAddedCheckBox = findViewById(R.id.checkbox);
 
-        saveButton.setEnabled(false);
 
         addPhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,6 +70,34 @@ public class LoginActivity extends AppCompatActivity {
                 dispatchTakePictureIntent();
             }
         });
+        saveButton.setEnabled(false);
+        TextWatcher watcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                enableSaveButton();
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+
+        };
+        firstNameEditText.addTextChangedListener(watcher);
+        lastNameEditText.addTextChangedListener(watcher);
+
+        genderTextView.addTextChangedListener(watcher);
+        femaleRadioButton.addTextChangedListener(watcher);
+        maleRadioButton.addTextChangedListener(watcher);
+
+        emailEditText.addTextChangedListener(watcher);
+        passwordEditText.addTextChangedListener(watcher);
 
 
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -78,21 +108,34 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 String firstName = firstNameEditText.getText().toString();
                 String lastName = lastNameEditText.getText().toString();
-                user = new User(firstName, lastName, returnCurrentPath);
+                String email = emailEditText.getText().toString();
 
-                returnIntent();
+                int childCount = radioGender.getChildCount();
+                String gender = null;
+                for (int i = 0; i < childCount; i++) {
+                    RadioButton button = (RadioButton) radioGender.getChildAt(i);
+                    if (button.getId() == R.id.femaleRadioButton) {
+                        button.setText("Female");
+                    } else {
+                        button.setText("Male");
+                    }
+                    if (button.isChecked()) {
+                        gender = button.getText().toString();
+                    }
+                }
+
+                user = new User(firstName, lastName, gender, email, returnCurrentPath);
+
+                returnIntent(user);
             }
         });
 
 
     }
 
-    private void returnIntent() {
+    private void returnIntent(User u) {
         Intent returnIntent = new Intent();
-        returnIntent.putExtra("firstName", user.getFirstName());
-        returnIntent.putExtra("lastName", user.getLastName());
-        returnIntent.putExtra("imgPath", user.getImgPath());
-
+        returnIntent.putExtra("user", u);
         setResult(LoginActivity.RESULT_OK, returnIntent);
         finish();
     }
@@ -124,8 +167,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            photoAddedCheckBox.setChecked(true); // is this ok?
-            enableSaveButton();//էս դեպքում պետքա ամեն ինչ հերթականությամբ գրել թե չէ չի աշխատի
+            photoAddedCheckBox.setChecked(true);
+            enableSaveButton();
             returnCurrentPath = currentPath;
         }
     }
@@ -163,7 +206,7 @@ public class LoginActivity extends AppCompatActivity {
             emailEditText.setError("Email isn't valid");
             return false;
         }
-        if (!(femaleRadioButton.isChecked()||maleRadioButton.isChecked())){
+        if (!(femaleRadioButton.isChecked() || maleRadioButton.isChecked())) {
             genderTextView.setError("Select gender");
             return false;
         }
@@ -178,7 +221,7 @@ public class LoginActivity extends AppCompatActivity {
     private void enableSaveButton() {
         if (photoAddedCheckBox.isChecked() && isValid()) {
             saveButton.setEnabled(true);
-        }
+        } else saveButton.setEnabled(false);
     }
 
 }

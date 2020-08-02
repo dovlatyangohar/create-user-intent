@@ -14,6 +14,11 @@ import java.util.List;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     private List<User> users;
+    private OnItemClickListener itemClickListener;
+
+    public void setListener(OnItemClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
+    }
 
     UserAdapter(List<User> users) {
         this.users = users;
@@ -28,13 +33,31 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        User user = users.get(position);
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+        final User user = users.get(position);
+
         holder.firstName.setText(user.getFirstName() + " ");
         holder.lastName.setText(user.getLastName());
         holder.coverImageView.setImageBitmap(BitmapFactory.decodeFile(user.getImgPath()));
 
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                itemClickListener.onItemClickListener(user);
+            }
+        });
 
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (user.isSelected() && holder.getAdapterPosition() != RecyclerView.NO_POSITION) {
+                    users.remove(user);
+                    notifyItemRemoved(holder.getAdapterPosition());
+                }
+                itemClickListener.onItemLongClickListener(user);
+                return true;
+            }
+        });
     }
 
     @Override
@@ -53,5 +76,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             lastName = itemView.findViewById(R.id.lastNameTextView);
             coverImageView = itemView.findViewById(R.id.userImage);
         }
+    }
+
+    interface OnItemClickListener {
+
+        void onItemClickListener(User user);
+
+        void onItemLongClickListener(User user);
+
     }
 }

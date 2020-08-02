@@ -14,4 +14,9 @@
     <string name="first_nametv">First NameTV</string>
     <string name="last_nametv">Last NameTV</string>
     <string name="create_new_user">Create new user</string>
+    <string name="user_cover">user cover</string>
+    <string name="first_name_detailed">First name </string>
+    <string name="last_name_detailed">Last name</string>
+    <string name="gender_detailed">Gender</string>
+    <string name="email_detailed">Email</string>
 </resources>
